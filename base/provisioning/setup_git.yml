@@ -1,0 +1,32 @@
+---
+- name: Setup git user.name
+  ansible.builtin.git_config:
+    name: user.name
+    scope: global
+    value: "Jose Balanza Martinez"
+  become_user: "{{ guest_user }}"
+- name: Setup git user.email
+  ansible.builtin.git_config:
+    name: user.email
+    scope: global
+    value: braulio.balanza@gmail.com
+  become_user: "{{ guest_user }}"
+- name: Setup pull strategy
+  ansible.builtin.git_config:
+    name: pull.rebase
+    scope: global
+    value: "true"
+  become_user: "{{ guest_user }}"
+- name: Setup prune on fetch
+  ansible.builtin.git_config:
+    name: fetch.prune
+    scope: global
+    value: "true"
+  become_user: "{{ guest_user }}"
+- name: Setup zebra diff mode
+  ansible.builtin.git_config:
+    name: diff.colorMoved
+    scope: global
+    value: "zebra"
+  become_user: "{{ guest_user }}"
+...

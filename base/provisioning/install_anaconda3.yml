@@ -1,0 +1,26 @@
+---
+- name: Install prerequisites
+  ansible.builtin.package:
+    name:
+      - libXcomposite
+      - libXcursor
+      - libXi
+      - libXtst
+      - libXrandr
+      - alsa-lib
+      - mesa-libEGL
+      - libXdamage
+      - mesa-libGL
+      - libXScrnSaver
+    state: present
+- name: Download installer
+  ansible.builtin.get_url:
+    url: https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    dest: /tmp/conda_install.sh
+    mode: "0755"
+    force: true
+- name: Install Anaconda3
+  ansible.builtin.shell:
+    cmd: "/tmp/conda_install.sh -b -f"
+  become_user: "{{ guest_user }}"
+...

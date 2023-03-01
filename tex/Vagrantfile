@@ -1,0 +1,32 @@
+Vagrant.configure("2") do |config|
+    config.vm.define :tex do |tex|
+    tex.vm.box = "debian/bullseye64"
+    tex.vm.box_url = "https://app.vagrantup.com/debian/boxes/bullseye64"
+    tex.vm.box_version = "11.20221219.1"
+    tex.vm.hostname = "tex"
+    tex.ssh.username = "vagrant"
+    tex.vm.network "private_network", ip: "192.168.56.4"
+
+    tex.vm.provider :virtualbox
+    tex.vm.disk :disk, size: "20GB", primary: true
+    config.vm.provider "virtualbox" do |v|
+      v.memory = 4096
+      v.cpus = 2
+    end
+
+    tex.vm.synced_folder "workspace/", "/workspace/", create: true
+
+    token = ""
+    if Dir.glob("#{File.dirname(__FILE__)}/.vagrant/machines/tex/*").empty? || ARGV[1] == '--provision'
+      print "Insert your github personal access token.\n"
+      token = STDIN.gets.chomp
+    end
+
+    tex.vm.provision :ansible do |ansible|
+    ansible.playbook = "provisioning/ansible.yml"
+    ansible.extra_vars = {
+      github_token: token
+    }
+    end
+  end
+end
