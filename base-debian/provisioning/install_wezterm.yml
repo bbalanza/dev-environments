@@ -1,0 +1,12 @@
+---
+- name: Install Wezterm
+  ansible.builtin.get_url:
+    url: https://github.com/wez/wezterm/releases/download/20221119-145034-49b9839f/WezTerm-20221119-145034-49b9839f-Ubuntu18.04.AppImage
+    dest: /usr/bin/wezterm
+    mode: '0755'
+    force: true
+# - name: Configure Wezterm
+  # ansible.builtin.shell:
+    # cmd: echo "alias wezterm='flatpak run org.wezfurlong.wezterm'" >> $HOME/.bashrc
+    # become_user: '{{ guest_user }}'
+...

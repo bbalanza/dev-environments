@@ -2,16 +2,15 @@
 - name: Install prerequisites
   ansible.builtin.package:
     name:
-      - libXcomposite
-      - libXcursor
-      - libXi
-      - libXtst
-      - libXrandr
-      - alsa-lib
-      - mesa-libEGL
-      - libXdamage
-      - mesa-libGL
-      - libXScrnSaver
+      - libgl1-mesa-glx
+      - libegl1-mesa
+      - libxrandr2
+      - libxss1
+      - libxcursor1
+      - libxcomposite1
+      - libasound2
+      - libxi6
+      - libxtst6
     state: present
 - name: Download installer
   ansible.builtin.get_url:
@@ -19,8 +18,12 @@
     dest: /tmp/conda_install.sh
     mode: "0755"
     force: true
+- name: Change shell to bash
+  ansible.builtin.user:
+    name: "{{ guest_user }}"
+    shell: /bin/bash
+  become: true
 - name: Install Anaconda3
   ansible.builtin.shell:
     cmd: "/tmp/conda_install.sh -b -f"
-  become_user: "{{ guest_user }}"
 ...

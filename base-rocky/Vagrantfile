@@ -1,0 +1,23 @@
+Vagrant.configure("2") do |config|
+    config.vm.define :base do |base|
+    base.vm.box = "debian/bullseye64"
+    base.vm.box_url = "https://app.vagrantup.com/debian/boxes/bullseye64"
+    base.vm.box_version = "11.20221219.1"
+    base.vm.hostname = "base"
+    base.ssh.username = "vagrant"
+    base.vm.network "private_network", ip: "192.168.56.4"
+
+    base.vm.provider :virtualbox
+    base.vm.disk :disk, size: "50GB", primary: true
+    config.vm.provider "virtualbox" do |v|
+      v.memory = 16384
+      v.cpus = 8
+    end
+
+    base.vm.synced_folder "workspace/", "/workspace/", create: true
+
+    base.vm.provision :ansible do |ansible|
+    ansible.playbook = "provisioning/ansible.yml"
+    end
+  end
+end
