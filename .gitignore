@@ -2,3 +2,4 @@
 output-vbox/
 .vagrant
 workspace/
+id_*

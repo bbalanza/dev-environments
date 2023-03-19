@@ -1,10 +1,13 @@
 ---
 - name: Install base dependencies
-  hosts: base
+  hosts: base_debian
   become: true
   vars:
-    guest_user: "vagrant"
+    guest_user: "vmnaut"
   pre_tasks:
+    - name: Configure vagrant user and ssh configs
+      ansible.builtin.include_role:
+        name: user_ssh_config
     - name: Enable Flatpak
       ansible.builtin.package:
         name:
@@ -19,6 +22,11 @@
         name: flathub
         state: present
         flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+    - name: Allow ssh-rsa authentication for vagrant
+      ansible.builtin.lineinfile:
+        path: /etc/ssh/sshd_config
+        line: PubkeyAcceptedKeyTypes=+ssh-rsa
+        create: false
   tasks:
     - name: Install base packages
       ansible.builtin.package:
@@ -29,6 +37,7 @@
           - bat
           - curl
           - neovim
+          - acl
         update_cache: true
         state: present
     - name: Include wezterm install

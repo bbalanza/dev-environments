@@ -1,0 +1,11 @@
+Host base_debian
+  HostName 127.0.0.1
+  User vagrant
+  Port 2222
+  UserKnownHostsFile /dev/null
+  StrictHostKeyChecking no
+  PasswordAuthentication no
+  IdentityFile /home/kykeonaut/Dropbox/Dev/dev_envs/base-debian/id_ed25519
+  IdentitiesOnly yes
+  LogLevel FATAL
+

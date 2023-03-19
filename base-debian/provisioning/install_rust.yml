@@ -12,4 +12,5 @@
   tags:
     - rust
   become_user: "{{ guest_user }}"
+  become_method: "sudo"
 ...

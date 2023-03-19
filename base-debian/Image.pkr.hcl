@@ -30,7 +30,7 @@ variable "disk_size" {
 
 variable "ssh_password" {
   type    = string
-  default = "vagrant"
+  default = "vmnaut"
 }
 
 variable "ssh_timeout" {
@@ -40,7 +40,7 @@ variable "ssh_timeout" {
 
 variable "ssh_username" {
   type    = string
-  default = "vagrant"
+  default = "vmnaut"
 }
 
 variable "ssh_handshake_attempts" {
@@ -93,8 +93,8 @@ build {
   provisioner "ansible" {
     playbook_file = "provisioning/ansible.yml"
     command = "ansible-playbook"
-    user = "vagrant"
-    inventory_file_template = "base ansible_host={{ .Host }} ansible_user={{ .User }} ansible_port={{ .Port }}\n"
+    user = "vmnaut"
+    inventory_file_template = "base_debian ansible_host={{ .Host }} ansible_user={{ .User }} ansible_port={{ .Port }} ansible_sudo_pass={{ .User }}\n"
   }
 
   post-processors {
