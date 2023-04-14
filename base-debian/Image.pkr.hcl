@@ -1,3 +1,9 @@
+variable "github_token" {
+  type = string
+  sensitive = true 
+  default = ""
+}
+
 variable "boot_wait" {
   type    = string
   default = "5s"
@@ -94,7 +100,12 @@ build {
     playbook_file = "provisioning/ansible.yml"
     command = "ansible-playbook"
     user = "vmnaut"
-    inventory_file_template = "base_debian ansible_host={{ .Host }} ansible_user={{ .User }} ansible_port={{ .Port }} ansible_sudo_pass={{ .User }}\n"
+    inventory_file_template = "base_debian
+     ansible_host={{ .Host }}
+     ansible_user={{ .User }}
+     ansible_port={{ .Port }}
+     ansible_sudo_pass={{ .User }}\n"
+    extra_arguments = ["--extra-vars", "github_token=${var.github_token}"]
   }
 
   post-processors {

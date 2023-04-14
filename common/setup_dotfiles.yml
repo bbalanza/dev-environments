@@ -1,0 +1,7 @@
+---
+- ansible.builtin.git:
+    repo: 'https://bbalanza:{{ github_token }}@github.com/bbalanza/dotfiles.git'
+    dest: /home/vmnaut
+    separate_git_dir: /home/vmnaut/.git_config
+    bare: True
+...

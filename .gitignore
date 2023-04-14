@@ -3,3 +3,4 @@ output-vbox/
 .vagrant
 workspace/
 id_*
+*.log

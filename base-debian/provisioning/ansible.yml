@@ -4,10 +4,10 @@
   become: true
   vars:
     guest_user: "vmnaut"
+    common_path: "../../common"
   pre_tasks:
-    - name: Configure vagrant user and ssh configs
-      ansible.builtin.include_role:
-        name: user_ssh_config
+    - name: Configure user and ssh configs
+      ansible.builtin.include_tasks: "{{ common_path }}/config_ssh_key.yml"
     - name: Enable Flatpak
       ansible.builtin.package:
         name:
@@ -15,18 +15,12 @@
         update_cache: true
     - name: Update repositories
       ansible.builtin.package: update_cache=yes
-      # become_user: root
       changed_when: false
     - name: Add the flathub flatpak repository remote to the user installation
       community.general.flatpak_remote:
         name: flathub
         state: present
         flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
-    - name: Allow ssh-rsa authentication for vagrant
-      ansible.builtin.lineinfile:
-        path: /etc/ssh/sshd_config
-        line: PubkeyAcceptedKeyTypes=+ssh-rsa
-        create: false
   tasks:
     - name: Install base packages
       ansible.builtin.package:
@@ -38,12 +32,18 @@
           - curl
           - neovim
           - acl
+          - fzf
+          - ripgrep
+          - exa
+          - zsh
         update_cache: true
         state: present
     - name: Include wezterm install
-      include_tasks: install_wezterm.yml
+      ansible.builtin.include_tasks: "{{ common_path }}/install_wezterm.yml"
     - name: Include rust install
-      include_tasks: install_rust.yml
+      ansible.builtin.include_tasks: "{{ common_path }}/install_rust.yml"
     - name: Setup git global configs
-      include_tasks: setup_git.yml
+      ansible.builtin.include_tasks: "{{ common_path }}/setup_git.yml"
+    - name: Setup config files
+      ansible.builtin.include_tasks: "{{ common_path }}/setup_dotfiles.yml"
 ...
