@@ -1,7 +1,26 @@
 ---
-- ansible.builtin.git:
-    repo: 'https://bbalanza:{{ github_token }}@github.com/bbalanza/dotfiles.git'
-    dest: /home/vmnaut
-    separate_git_dir: /home/vmnaut/.git_config
-    bare: True
+- name: Init config repo
+  ansible.builtin.command:
+    cmd: "git init --bare {{guest_home}}/.dotfiles" 
+    creates: "{{ guest_home }}/.dotfiles"
+  become_user: "{{ guest_user }}"
+- name: Add config origin
+  ansible.builtin.command:
+    cmd: "git --git-dir={{ guest_home }}/.dotfiles --work-tree={{ guest_home }} \
+      remote add origin https://bbalanza:{{ github_token }}@github.com/bbalanza/dotfiles.git" 
+    chdir: "{{ guest_home }}"
+  become_user: "{{ guest_user }}"
+- name: Fetch origin
+  ansible.builtin.command:
+    cmd: "git --git-dir={{ guest_home }}/.dotfiles --work-tree={{ guest_home }} \
+      fetch origin main"
+    chdir: "{{ guest_home }}"
+  become_user: "{{ guest_user }}"
+- name: Checkout main branch
+  ansible.builtin.command:
+    cmd: "git --git-dir={{ guest_home }}/.dotfiles --work-tree={{ guest_home }} \
+      checkout main --force"
+    chdir: "{{ guest_home }}"
+    creates: "{{ guest_home }}/.config"
+  become_user: "{{ guest_user }}"
 ...

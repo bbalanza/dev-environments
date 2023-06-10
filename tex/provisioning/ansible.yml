@@ -15,11 +15,6 @@
       ansible.builtin.package: update_cache=yes
       # become_user: root
       changed_when: false
-    - name: Add the flathub flatpak repository remote to the user installation
-      community.general.flatpak_remote:
-        name: flathub
-        state: present
-        flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
   tasks:
     - name: Install base packages
       ansible.builtin.package:
@@ -39,9 +34,15 @@
         dest: /usr/bin/wezterm
         mode: '0755'
         force: true
+    - name: Set locale to English so lualatex doesn't explode
+      community.general.locale_gen:
+        name: "en_US.UTF-8"
+        state: present
     - name: Install texlive
       ansible.builtin.package:
-        name: texlive-full
+        name: 
+          - texlive-full
+          - pandoc
         state: present
     - name: Setup git global configs
       include_tasks: setup_git.yml

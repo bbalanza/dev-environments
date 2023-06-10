@@ -5,7 +5,10 @@
   vars:
     guest_user: "vmnaut"
     common_path: "../../common"
+    guest_home: "/home/{{ guest_user }}"
   pre_tasks:
+    - name: Include secret variables
+      include_vars: "{{ common_path }}/secrets.yml"
     - name: Configure user and ssh configs
       ansible.builtin.include_tasks: "{{ common_path }}/config_ssh_key.yml"
     - name: Enable Flatpak
@@ -44,6 +47,11 @@
       ansible.builtin.include_tasks: "{{ common_path }}/install_rust.yml"
     - name: Setup git global configs
       ansible.builtin.include_tasks: "{{ common_path }}/setup_git.yml"
-    - name: Setup config files
-      ansible.builtin.include_tasks: "{{ common_path }}/setup_dotfiles.yml"
+    - name: Install nodejs
+      ansible.builtin.package:
+        name:
+          - nodejs
+          - npm
+        #- name: Setup config files
+        #ansible.builtin.include_tasks: "{{ common_path }}/setup_dotfiles.yml"
 ...

@@ -4,3 +4,4 @@ output-vbox/
 workspace/
 id_*
 *.log
+secrets*

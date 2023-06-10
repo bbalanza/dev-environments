@@ -1,9 +1,3 @@
-variable "github_token" {
-  type = string
-  sensitive = true 
-  default = ""
-}
-
 variable "boot_wait" {
   type    = string
   default = "5s"
@@ -105,7 +99,6 @@ build {
      ansible_user={{ .User }}
      ansible_port={{ .Port }}
      ansible_sudo_pass={{ .User }}\n"
-    extra_arguments = ["--extra-vars", "github_token=${var.github_token}"]
   }
 
   post-processors {
