@@ -1,32 +1,21 @@
 ---
 - name: Install nvim
-  ansible.builtin.package:
-    name:
-      - neovim
-      - python3-neovim
-    update_cache: true
-    state: present
-- name: Download lvim script
   ansible.builtin.get_url:
-    url: https://raw.githubusercontent.com/lunarvim/lunarvim/fc6873809934917b470bff1b072171879899a36b/utils/installer/install.sh
-    dest: /tmp/lunarvim_install.sh
+    url: https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage
+    dest: /usr/bin/
+    mode: a+x
+- name: Update alternatives
+  community.general.alternatives:
+    name: nvim
+    link: /usr/bin/nvim
+    path: /usr/bin/nvim.appimage
+- name: Create config dir if not exists
+  ansible.builtin.file:
+    path: "{{ guest_home }}/.config/nvim"
+    state: directory
     mode: '0755'
-    force: true
-- name: Install Lunar Vim
-  ansible.builtin.shell:
-    cmd: /tmp/lunarvim_install.sh -y --install-dependencies
-  become_user: "{{ guest_user }}"
-  environment:
-    LV_BRANCH: 'release-1.2/neovim-0.8'
-- name: Download Lunar Vim custom config
+- name: Clone configuration
   ansible.builtin.git:
-    repo: https://github.com/braulio-balanza/lunarvim-config.git
-    dest: /tmp/lvim-config
-    depth: 1
-    version: main
-  become_user: "{{ guest_user }}"
-- name: Move Lunar Vim config files
-  ansible.builtin.shell:
-    cmd: mv /tmp/lvim-config/* $HOME/.config/lvim/
-  become_user: "{{ guest_user }}"
+    repo: "https://bbalanza:{{ github_token }}@github.com/bbalanza/nvim-dotfiles.git"
+    dest: "{{ guest_home }}/.config/nvim"
 ...

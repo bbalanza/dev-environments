@@ -3,7 +3,7 @@
   hosts: base_debian
   become: true
   vars:
-    guest_user: "vmnaut"
+    guest_user: "vagrant"
     common_path: "../../common"
     guest_home: "/home/{{ guest_user }}"
   pre_tasks:
@@ -33,7 +33,6 @@
           - bc
           - bat
           - curl
-          - neovim
           - acl
           - fzf
           - ripgrep
@@ -47,6 +46,8 @@
       ansible.builtin.include_tasks: "{{ common_path }}/install_rust.yml"
     - name: Setup git global configs
       ansible.builtin.include_tasks: "{{ common_path }}/setup_git.yml"
+    - name: Install nvim 
+      ansible.builtin.include_tasks: "{{ common_path }}/install_nvim.yml"
     - name: Install nodejs
       ansible.builtin.package:
         name:
