@@ -1,0 +1,31 @@
+---
+- name: Install base dependencies
+  hosts: base_freebsd
+  become: true
+  vars:
+    guest_user: "vagrant"
+    common_path: "../../common"
+    guest_home: "/home/{{ guest_user }}"
+  pre_tasks:
+    - name: Include secret variables
+      include_vars: "{{ common_path }}/secrets.yml"
+    - name: Change repo from quartely to latest
+      ansible.builtin.shell: |
+        mkdir -p /usr/local/etc/pkg/repos
+        echo 'FreeBSD: { url: "pkg+http://pkg.FreeBSD.org/${ABI}/latest" }' > \
+        /usr/local/etc/pkg/repos/FreeBSD.conf
+    - name: Update pkg repository
+      ansible.builtin.shell: pkg update
+  tasks:
+    - name: Install base packages
+      ansible.builtin.package:
+        name:
+          - git
+          - curl
+          - zsh
+          - htop
+          - neovim
+        state: present
+    - name: Setup git global configs
+      ansible.builtin.include_tasks: "{{ common_path }}/setup_git.yml"
+...
