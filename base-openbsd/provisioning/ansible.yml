@@ -1,0 +1,24 @@
+---
+- name: Install base dependencies
+  hosts: openbsd
+  become: true
+  vars:
+    guest_user: "vagrant"
+    common_path: "../../common"
+    guest_home: "/home/{{ guest_user }}"
+  pre_tasks:
+    - name: Include secret variables
+      include_vars: "{{ common_path }}/secrets.yml"
+  tasks:
+    - name: Install base packages
+      ansible.builtin.package:
+        name:
+          - git
+          - zsh
+          - htop
+          - neovim
+          - neofetch
+        state: present
+    - name: Setup git global configs
+      ansible.builtin.include_tasks: "{{ common_path }}/setup_git.yml"
+...
