@@ -1,0 +1,28 @@
+Vagrant.configure("2") do |config|
+    config.vm.define :nix_debian do |nix_debian|
+    nix_debian.vm.box = "debian/bookworm64"
+    nix_debian.vm.box_url = "https://app.vagrantup.com/debian/boxes/bookworm64"
+    nix_debian.vm.hostname = "nix-debian"
+    # nix_debian.ssh.username = "vmnaut"
+    # nix_debian.ssh.private_key_path = "../id_ed25519"
+
+    nix_debian.ssh.shell="bash"
+
+    nix_debian.vm.network "private_network", ip: "192.168.56.4"
+    config.vm.network "forwarded_port", guest: 8000, host: 8003
+
+    nix_debian.vm.provider :virtualbox
+    nix_debian.vm.disk :disk, size: "40960MB", primary: true
+    config.vm.provider "virtualbox" do |v|
+      v.memory = 16384
+      v.cpus = 8
+    end
+
+    nix_debian.vm.synced_folder "workspace/", "/workspace/", create: true
+
+    nix_debian.vm.provision "shell",
+    inline: "wget -qO- https://nixos.org/nix/install | sh -s",
+    privileged: false
+
+    end
+end
