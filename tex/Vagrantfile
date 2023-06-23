@@ -10,6 +10,7 @@ Vagrant.configure("2") do |config|
     tex.vm.provider :virtualbox
     tex.vm.disk :disk, size: "20GB", primary: true
     config.vm.provider "virtualbox" do |v|
+      v.customize ['modifyvm', :id, '--clipboard', 'bidirectional']
       v.memory = 4096
       v.cpus = 2
     end

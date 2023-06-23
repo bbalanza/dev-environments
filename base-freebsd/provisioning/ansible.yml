@@ -25,6 +25,8 @@
           - zsh
           - htop
           - neovim
+          - node
+          - npm
         state: present
     - name: Setup git global configs
       ansible.builtin.include_tasks: "{{ common_path }}/setup_git.yml"

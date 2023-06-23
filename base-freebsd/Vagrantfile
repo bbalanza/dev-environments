@@ -20,11 +20,13 @@ Vagrant.configure("2") do |config|
       create: true, 
       type: "nfs",
       nfs_version: 4,
-      mount_options: ['noacl,nocto,noatime']
+      mount_options: ['nocto,noatime']
 
-    base_freebsd.vm.provision "shell",
-    inline: "pkg install -y python"
-
+    base_freebsd.vm.provision "shell" do |shell|
+      ssh_pub_key = File.readlines("../id_ed25519.pub").first.strip
+      shell.inline = "echo #{ssh_pub_key} >> /home/vagrant/.ssh/authorized_keys"
+      shell.inline = "pkg install -y python"
+    end
 
     base_freebsd.vm.provision :ansible do |ansible|
     ansible.playbook = "provisioning/ansible.yml"
