@@ -25,9 +25,21 @@
           - zsh
           - htop
           - neovim
+          - obhttpd
+          - libressl
+          - fzf
+          - bat
+          - exa
           - node
           - npm
+          - lua
         state: present
+    - name: Change shell to bash
+      ansible.builtin.user:
+        name: "{{ guest_user}}"
+        shell: /usr/local/bin/bash
     - name: Setup git global configs
       ansible.builtin.include_tasks: "{{ common_path }}/setup_git.yml"
+    - name: Setup neovim
+      ansible.builtin.include_tasks: "{{ common_path }}/setup_nvim.yml"
 ...

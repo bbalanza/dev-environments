@@ -15,6 +15,7 @@ Vagrant.configure("2") do |config|
     base_freebsd.ssh.shell="sh"
 
     base_freebsd.vm.network "private_network", ip: "192.168.56.4"
+    base_freebsd.vm.network "forwarded_port", guest: 80, host: 8000
 
     base_freebsd.vm.synced_folder "workspace/", "/workspace/", 
       create: true, 

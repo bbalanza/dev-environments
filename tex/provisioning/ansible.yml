@@ -1,9 +1,9 @@
 ---
-- name: Setup tex environment
+- name: Set up image
   hosts: all
   vars:
-    guest_user: "vagrant"
-    github_user: "braulio-balanza"
+    common_path: "../../common"
+    github_user: "bbalanza"
   become: true
   pre_tasks:
     - name: Enable Flatpak
@@ -38,16 +38,8 @@
       community.general.locale_gen:
         name: "en_US.UTF-8"
         state: present
-    - name: Install texlive
-      ansible.builtin.package:
-        name: 
-          - texlive-full
-          - pandoc
-        state: present
     - name: Setup git global configs
-      include_tasks: setup_git.yml
-    # - name: Include rust install tasks
-      # include_tasks: install_rust.yml
-    # - name: Include nvim install tasks
-      # include_tasks: install_nvim.yml
+      ansible.builtin.include_tasks: "{{ common_path }}/setup_git.yml"
+    - name: Include ssh key
+      ansible.builtin.include_tasks: "{{ common_path }}/config_ssh_key.yml"
 ...

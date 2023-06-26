@@ -9,13 +9,4 @@
     name: nvim
     link: /usr/bin/nvim
     path: /usr/bin/nvim.appimage
-- name: Create config dir if not exists
-  ansible.builtin.file:
-    path: "{{ guest_home }}/.config/nvim"
-    state: directory
-    mode: '0755'
-- name: Clone configuration
-  ansible.builtin.git:
-    repo: "https://bbalanza:{{ github_token }}@github.com/bbalanza/nvim-dotfiles.git"
-    dest: "{{ guest_home }}/.config/nvim"
 ...
