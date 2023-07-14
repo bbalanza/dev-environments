@@ -5,7 +5,10 @@ Vagrant.configure("2") do |config|
     tex.vm.box_version = "11.20221219.1"
     tex.vm.hostname = "tex"
     tex.ssh.username = "vagrant"
+    tex.ssh.guest_port = 2298
+    tex.ssh.port = 2298
     tex.vm.network "private_network", ip: "192.168.56.4"
+    tex.vm.network "forwarded_port", guest: 22, host: 2298
 
     tex.vm.provider :virtualbox
     tex.vm.disk :disk, size: "20GB", primary: true
