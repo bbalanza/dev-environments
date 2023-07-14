@@ -1,4 +1,25 @@
 ---
+- name: Add github ssh key to vm
+  ansible.builtin.copy:
+    src: "../github_key"
+    dest: "{{ guest_home }}/.ssh/"
+    owner: "{{ guest_user }}"
+    group: "{{ guest_user }}"
+    mode: '0600'
+- name: Add github key to ssh-agent
+  ansible.builtin.shell:
+    cmd: | 
+      eval `ssh-agent -s`
+      ssh-add "{{guest_home}}/.ssh/github_key"
+      echo export SSH_AUTH_SOCK=$SSH_AUTH_SOCK >> "{{ guest_home }}/.bashrc"
+      echo export SSH_AGENT_PID=$SSH_AGENT_PID >> "{{ guest_home }}/.bashrc"
+  register: env_vars_stdout
+  become_user: '{{ guest_user }}'
+- name: Setup environment variables
+  ansible.builtin.blockinfile:
+    path: "$HOME/.bashrc"
+    block: |
+      
 - name: Setup git user.name
   ansible.builtin.git_config:
     name: user.name

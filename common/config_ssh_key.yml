@@ -9,7 +9,7 @@
     dest: /etc/sudoers.d/wheel_no_password
     mode: 0440
     validate: '/usr/sbin/visudo -cf %s'
-- name: Setup vagrant's ssh public key
+- name: Add private key to authorized keys to allow Vagrant to login
   ansible.posix.authorized_key:
     user: vagrant
     state: present

@@ -5,3 +5,4 @@ workspace/
 id_*
 *.log
 secrets*
+github_key
