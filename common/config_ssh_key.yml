@@ -7,7 +7,7 @@
   ansible.builtin.copy:
     content: '%wheel ALL=(ALL:ALL) NOPASSWD:ALL'
     dest: /etc/sudoers.d/wheel_no_password
-    mode: 0440
+    mode: 440
     validate: '/usr/sbin/visudo -cf %s'
 - name: Add private key to authorized keys to allow Vagrant to login
   ansible.posix.authorized_key:

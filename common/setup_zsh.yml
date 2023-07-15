@@ -1,0 +1,33 @@
+---
+- name: Change user shell to zsh
+  ansible.builtin.user:
+    name: "{{ guest_user }}"
+    shell: /usr/bin/zsh
+- name: Clone dotfiles
+  ansible.builtin.git:
+    dest: "{{ guest_home }}/.config/zsh"
+    repo: "https://bbalanza:{{ github_token}}@github.com/bbalanza/zsh_dotfiles.git"
+- name: Setup .zshenv
+  ansible.builtin.blockinfile:
+    dest: "{{ guest_home }}/.zshenv"
+    block: |
+      export XDG_CONFIG_HOME="$HOME/.config"
+      export XDG_DATA_HOME="$XDG_CONFIG_HOME/local/share"
+      export XDG_CACHE_HOME="$XDG_CONFIG_HOME/cache"
+
+      export EDITOR="nvim"
+      export VISUAL="nvim"
+
+      export ZDOTDIR="$HOME/.config/zsh"
+      export HISTFILE="$ZDOTDIR/.zhistory"
+
+      export HISTSIZE=10000
+      export SAVEHIST=10000
+    create: true
+  become_user: "{{ guest_user }}"
+- name: Install oh-my-sh
+  ansible.builtin.git:
+    dest: "{{ guest_home }}/.oh-my-zsh"
+    repo: "https://github.com/ohmyzsh/ohmyzsh.git"
+  become_user: "{{ guest_user }}"
+...

@@ -46,13 +46,13 @@
       ansible.builtin.include_tasks: "{{ common_path }}/install_rust.yml"
     - name: Setup git global configs
       ansible.builtin.include_tasks: "{{ common_path }}/setup_git.yml"
-    - name: Install nvim 
+    - name: Install nvim
       ansible.builtin.include_tasks: "{{ common_path }}/install_nvim.yml"
     - name: Install nodejs
       ansible.builtin.package:
         name:
           - nodejs
           - npm
-        #- name: Setup config files
-        #ansible.builtin.include_tasks: "{{ common_path }}/setup_dotfiles.yml"
+    - name: Setup zsh
+      ansible.builtin.include_tasks: "{{ common_path }}/setup_zsh.yml"
 ...
