@@ -30,4 +30,37 @@
     dest: "{{ guest_home }}/.oh-my-zsh"
     repo: "https://github.com/ohmyzsh/ohmyzsh.git"
   become_user: "{{ guest_user }}"
+- name: Install fzf-tab
+  ansible.builtin.git:
+    repo: "https://github.com/Aloxaf/fzf-tab"
+    dest: "{{ guest_home }}/.oh-my-zsh/custom/plugins/fzf-tab"
+  become_user: "{{ guest_user }}"
+- name: Install startship
+  ansible.builtin.shell:
+    executable: /usr/bin/zsh
+    cmd: |
+      curl -sS https://starship.rs/install.sh | sh -s -- --yes
+- name: Add startshipconfig
+  ansible.builtin.blockinfile:
+    dest: "{{ guest_home }}/.config/starship.toml"
+    create: true
+    block: |
+      format = '''
+      $time$all
+      '''
+
+      [character]
+      success_symbol = '[|-](bold green)'
+      error_symbol = '[✖](bold red)'
+      vimcmd_symbol = '[-|](bold green)'
+      vimcmd_replace_one_symbol = '[-|](bold purple)'
+      vimcmd_replace_symbol = '[-|](bold purple)'
+      vimcmd_visual_symbol = '[-|](bold yellow)'
+
+      [time]
+      format = '|[$time]($style)| '
+      disabled = false
+
+      [line_break]
+      disabled = false
 ...
