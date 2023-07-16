@@ -4,4 +4,9 @@
     state: directory
     owner: "{{ guest_user }}"
     mode: "755"
+- ansible.builtin.file:
+    path: "{{ guest_home }}/.local"
+    state: directory
+    owner: "{{ guest_user }}"
+    mode: "755"
 ...

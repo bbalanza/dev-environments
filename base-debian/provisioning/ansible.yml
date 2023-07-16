@@ -24,8 +24,8 @@
         name: flathub
         state: present
         flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
-    - name: Create .config folder
-      ansible.builtin.include_tasks: "{{ common_path }}/create_conf.yml"
+    - name: Create .config and .local folder
+      ansible.builtin.include_tasks: "{{ common_path }}/create_home_folders.yml"
   tasks:
     - name: Install base packages
       ansible.builtin.include_tasks: "{{ common_path }}/install_base_packages.yml"
