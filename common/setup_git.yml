@@ -8,7 +8,7 @@
     mode: '0600'
 - name: Add github key to ssh-agent
   ansible.builtin.shell:
-    cmd: | 
+    cmd: |
       eval `ssh-agent -s`
       ssh-add "{{guest_home}}/.ssh/github_key"
       echo export SSH_AUTH_SOCK=$SSH_AUTH_SOCK >> "{{ guest_home }}/.bashrc"
@@ -19,7 +19,7 @@
   ansible.builtin.blockinfile:
     path: "$HOME/.bashrc"
     block: |
-      
+
 - name: Setup git user.name
   ansible.builtin.git_config:
     name: user.name

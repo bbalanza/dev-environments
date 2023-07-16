@@ -1,45 +1,42 @@
 ---
-- name: Set up image
-  hosts: all
+- name: Set tex image
+  hosts: tex
   vars:
+    guest_user: "vagrant"
     common_path: "../../common"
-    github_user: "bbalanza"
+    guest_home: "/home/{{ guest_user }}"
   become: true
   pre_tasks:
-    - name: Enable Flatpak
-      ansible.builtin.package:
-        name:
-          - flatpak
-        update_cache: true
+    - name: Include secret variables
+      include_vars: "{{ common_path }}/secrets.yml"
     - name: Update repositories
       ansible.builtin.package: update_cache=yes
-      # become_user: root
       changed_when: false
-  tasks:
-    - name: Install base packages
-      ansible.builtin.package:
-        name:
-          - build-essential
-          - nodejs
-          - python3
-          - python3-pip
-          - git
-          - bc
-          - bat
-        update_cache: true
-        state: present
-    - name: Install Wezterm
-      ansible.builtin.get_url:
-        url: https://github.com/wez/wezterm/releases/download/20221119-145034-49b9839f/WezTerm-20221119-145034-49b9839f-Ubuntu18.04.AppImage
-        dest: /usr/bin/wezterm
-        mode: '0755'
-        force: true
-    - name: Set locale to English so lualatex doesn't explode
-      community.general.locale_gen:
-        name: "en_US.UTF-8"
-        state: present
-    - name: Setup git global configs
-      ansible.builtin.include_tasks: "{{ common_path }}/setup_git.yml"
     - name: Include ssh key
       ansible.builtin.include_tasks: "{{ common_path }}/config_ssh_key.yml"
+    - name: Create .config and .local folder
+      ansible.builtin.include_tasks: "{{ common_path }}/create_home_folders.yml"
+  tasks:
+    - name: Install base packages
+      ansible.builtin.include_tasks: "{{ common_path }}/install_base_packages.yml"
+    - name: Install necessary tex packages
+      ansible.builtin.package:
+        name:
+          - python3
+          - python3-pip
+          - perl
+        update_cache: true
+        state: present
+    - name: Include wezterm install
+      ansible.builtin.include_tasks: "{{ common_path }}/install_wezterm.yml"
+    - name: Setup git global configs
+      ansible.builtin.include_tasks: "{{ common_path }}/setup_git.yml"
+    - name: Install nvim
+      ansible.builtin.include_tasks: "{{ common_path }}/install_nvim.yml"
+    - name: Setup nvim
+      ansible.builtin.include_tasks: "{{ common_path }}/setup_nvim.yml"
+    - name: Setup zsh
+      ansible.builtin.include_tasks: "{{ common_path }}/setup_zsh.yml"
+    - name: Install texlive
+      ansible.builtin.include_tasks: "{{ common_path }}/install_texlive.yml"
 ...

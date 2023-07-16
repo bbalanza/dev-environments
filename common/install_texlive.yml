@@ -1,0 +1,27 @@
+---
+- name: Ensure locale exists
+  community.general.locale_gen:
+    name: "en_US.UTF-8"
+    state: present
+- name: Set as default locale
+  ansible.builtin.shell:
+    cmd: |
+      localectl set-locale \
+      LANG="en_US.UTF-8" \
+      LANGUAGE="en_US.UTF-8"
+- ansible.builtin.shell:
+    chdir: "{{ guest_home }}"
+    cmd: |
+      mkdir -p "{{ guest_home}}/.local/tmp"
+      cd "{{ guest_home}}/.local/tmp"
+      curl -L https://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz -o texlive.tar.gz
+      zcat < texlive.tar.gz | tar xf -
+      cd install-tl-*
+      perl ./install-tl --no-interaction
+      rm -rf "{{ guest_home}}/.local/tmp"
+  timeout: 3600
+- ansible.builtin.blockinfile:
+    dest: "{{ guest_home }}/.config/zsh/.zshrc"
+    block: |
+      export PATH="/usr/local/texlive/2023/bin/x86_64-linux:$PATH"
+...

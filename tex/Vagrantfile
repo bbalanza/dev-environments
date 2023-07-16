@@ -1,8 +1,7 @@
 Vagrant.configure("2") do |config|
     config.vm.define :tex do |tex|
-    tex.vm.box = "debian/bullseye64"
-    tex.vm.box_url = "https://app.vagrantup.com/debian/boxes/bullseye64"
-    tex.vm.box_version = "11.20221219.1"
+    tex.vm.box = "debian/testing64"
+    tex.vm.box_url = "https://app.vagrantup.com/debian/boxes/testing64"
     tex.vm.hostname = "tex"
     tex.ssh.username = "vagrant"
     tex.ssh.guest_port = 2298
@@ -22,7 +21,7 @@ Vagrant.configure("2") do |config|
 
     tex.vm.provision :ansible do |ansible|
     ansible.playbook = "provisioning/ansible.yml"
-    ansible.raw_arguments = ["--vault-password-file=../secrets_password.txt"]
+    ansible.raw_arguments = ["--vault-password-file=../secrets_password.txt", "-v"]
     end
   end
 end
