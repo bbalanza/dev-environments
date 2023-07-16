@@ -1,11 +1,25 @@
 ---
+#- name: Show facts available on the system
+#  ansible.builtin.debug:
+#    var: ansible_facts
 - name: Create config dir if not exists
   ansible.builtin.file:
     path: "{{ guest_home }}/.config/nvim"
     state: directory
     mode: '0755'
+    owner: "{{ guest_user }}"
 - name: Clone configuration
   ansible.builtin.git:
     repo: "https://bbalanza:{{ github_token }}@github.com/bbalanza/nvim-dotfiles.git"
     dest: "{{ guest_home }}/.config/nvim"
+  when: ansible_facts['hostname'] != "tex"
+  become_user: "{{ guest_user }}"
+- name: Clone tex configuration
+  ansible.builtin.git:
+    repo: "https://bbalanza:{{ github_token }}@github.com/bbalanza/nvim-dotfiles.git"
+    dest: "{{ guest_home }}/.config/nvim"
+    single_branch: true
+    version: tex
+  when: ansible_facts['hostname'] == "tex"
+  become_user: "{{ guest_user }}"
 ...

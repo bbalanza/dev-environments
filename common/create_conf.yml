@@ -1,0 +1,7 @@
+---
+- ansible.builtin.file:
+    path: "{{ guest_home }}/.config"
+    state: directory
+    owner: "{{ guest_user }}"
+    mode: "755"
+...

@@ -1,6 +1,6 @@
 ---
 - name: Install base dependencies
-  hosts: base_debian
+  hosts: debian
   become: true
   vars:
     guest_user: "vagrant"
@@ -8,7 +8,7 @@
     guest_home: "/home/{{ guest_user }}"
   pre_tasks:
     - name: Include secret variables
-      include_vars: "{{ common_path }}/secrets.yml"
+      ansible.builtin.include_vars: "{{ common_path }}/secrets.yml"
     - name: Configure user and ssh configs
       ansible.builtin.include_tasks: "{{ common_path }}/config_ssh_key.yml"
     - name: Enable Flatpak
@@ -24,35 +24,28 @@
         name: flathub
         state: present
         flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+    - name: Create .config folder
+      ansible.builtin.include_tasks: "{{ common_path }}/create_conf.yml"
   tasks:
     - name: Install base packages
-      ansible.builtin.package:
-        name:
-          - build-essential
-          - git
-          - bc
-          - bat
-          - curl
-          - acl
-          - fzf
-          - ripgrep
-          - exa
-          - zsh
-        update_cache: true
-        state: present
+      ansible.builtin.include_tasks: "{{ common_path }}/install_base_packages.yml"
     - name: Include wezterm install
       ansible.builtin.include_tasks: "{{ common_path }}/install_wezterm.yml"
-    - name: Include rust install
-      ansible.builtin.include_tasks: "{{ common_path }}/install_rust.yml"
     - name: Setup git global configs
       ansible.builtin.include_tasks: "{{ common_path }}/setup_git.yml"
     - name: Install nvim
       ansible.builtin.include_tasks: "{{ common_path }}/install_nvim.yml"
+    - name: Setup nvim
+      ansible.builtin.include_tasks: "{{ common_path }}/setup_nvim.yml"
+    - name: Setup zsh
+      ansible.builtin.include_tasks: "{{ common_path }}/setup_zsh.yml"
+    - name: Install rust
+      ansible.builtin.include_tasks: "{{ common_path }}/install_rust.yml"
+    - name: Install golang
+      ansible.builtin.include_tasks: "{{ common_path }}/install_golang.yml"
     - name: Install nodejs
       ansible.builtin.package:
         name:
           - nodejs
           - npm
-    - name: Setup zsh
-      ansible.builtin.include_tasks: "{{ common_path }}/setup_zsh.yml"
 ...

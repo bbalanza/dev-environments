@@ -1,0 +1,17 @@
+---
+- ansible.builtin.package:
+    name:
+      - build-essential
+      - git
+      - bc
+      - bat
+      - curl
+      - acl
+      - fzf
+      - ripgrep
+      - exa
+      - zsh
+      - fd-find
+    update_cache: true
+    state: present
+...

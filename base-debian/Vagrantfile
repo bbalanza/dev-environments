@@ -1,29 +1,28 @@
 Vagrant.configure("2") do |config|
-    config.vm.define :base_debian do |base_debian|
-    base_debian.vm.box = "debian/bullseye64"
-    base_debian.vm.box_url = "https://app.vagrantup.com/debian/boxes/bullseye64"
-    base_debian.vm.box_version = "11.20221219.1"
-    base_debian.vm.hostname = "base-debian"
-    base_debian.ssh.guest_port = 2297
-    base_debian.vm.network "forwarded_port", guest: 22, host: 2297
-    # base_debian.ssh.username = "vmnaut"
-    # base_debian.ssh.private_key_path = "../id_ed25519"
+    config.vm.define :debian do |debian|
+    debian.vm.box = "debian/testing64"
+    debian.vm.box_url = "https://app.vagrantup.com/debian/boxes/testing64"
+    debian.vm.hostname = "debian"
+    debian.ssh.guest_port = 2297
+    debian.vm.network "forwarded_port", guest: 22, host: 2297
+    # debian.ssh.username = "vmnaut"
+    # debian.ssh.private_key_path = "../id_ed25519"
 
-    base_debian.ssh.shell="bash"
+    debian.ssh.shell="bash"
 
-    base_debian.vm.network "private_network", ip: "192.168.56.4"
-    base_debian.vm.network "forwarded_port", guest: 8000, host: 8000
+    debian.vm.network "private_network", ip: "192.168.56.4"
+    debian.vm.network "forwarded_port", guest: 8000, host: 8000
 
-    base_debian.vm.provider :virtualbox
-    base_debian.vm.disk :disk, size: "40960MB", primary: true
+    debian.vm.provider :virtualbox
+    debian.vm.disk :disk, size: "40960MB", primary: true
     config.vm.provider "virtualbox" do |v|
       v.memory = 16384
       v.cpus = 8
     end
 
-    base_debian.vm.synced_folder "workspace/", "/workspace/", create: true
+    debian.vm.synced_folder "workspace/", "/workspace/", create: true
 
-    base_debian.vm.provision :ansible do |ansible|
+    debian.vm.provision :ansible do |ansible|
     ansible.playbook = "provisioning/ansible.yml"
     ansible.raw_arguments = ["--vault-password-file=../secrets_password.txt"]
     end

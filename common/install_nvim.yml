@@ -1,7 +1,7 @@
 ---
 - name: Install nvim
   ansible.builtin.get_url:
-    url: https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage
+    url: https://github.com/neovim/neovim/releases/download/stable/nvim.appimage
     dest: /usr/bin/
     mode: a+x
 - name: Update alternatives

@@ -7,6 +7,7 @@
   ansible.builtin.git:
     dest: "{{ guest_home }}/.config/zsh"
     repo: "https://bbalanza:{{ github_token}}@github.com/bbalanza/zsh_dotfiles.git"
+  become_user: "{{ guest_user }}"
 - name: Setup .zshenv
   ansible.builtin.blockinfile:
     dest: "{{ guest_home }}/.zshenv"
@@ -34,6 +35,11 @@
   ansible.builtin.git:
     repo: "https://github.com/Aloxaf/fzf-tab"
     dest: "{{ guest_home }}/.oh-my-zsh/custom/plugins/fzf-tab"
+  become_user: "{{ guest_user }}"
+- name: Install zsh-vi-mode
+  ansible.builtin.git:
+    repo: "https://github.com/jeffreytse/zsh-vi-mode.git"
+    dest: "{{ guest_home }}/.oh-my-zsh/custom/plugins/zsh-vi-mode"
   become_user: "{{ guest_user }}"
 - name: Install startship
   ansible.builtin.shell:

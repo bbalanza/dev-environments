@@ -1,13 +1,13 @@
 ---
 - name: Init config repo
   ansible.builtin.command:
-    cmd: "git init --bare {{guest_home}}/.dotfiles" 
+    cmd: "git init --bare {{guest_home}}/.dotfiles"
     creates: "{{ guest_home }}/.dotfiles"
   become_user: "{{ guest_user }}"
 - name: Add config origin
   ansible.builtin.command:
     cmd: "git --git-dir={{ guest_home }}/.dotfiles --work-tree={{ guest_home }} \
-      remote add origin https://bbalanza:{{ github_token }}@github.com/bbalanza/dotfiles.git" 
+      remote add origin https://bbalanza:{{ github_token }}@github.com/bbalanza/dotfiles.git"
     chdir: "{{ guest_home }}"
   become_user: "{{ guest_user }}"
 - name: Fetch origin
@@ -24,3 +24,4 @@
     creates: "{{ guest_home }}/.config"
   become_user: "{{ guest_user }}"
 ...
+
