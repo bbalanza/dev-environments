@@ -1,8 +1,9 @@
 ---
 - name: Change user shell to zsh
-  ansible.builtin.user:
-    name: "{{ guest_user }}"
-    shell: /usr/bin/zsh
+  ansible.builtin.shell:
+    cmd: |
+      export SHELL_LOCATION=$( which zsh )
+      chsh -s $SHELL_LOCATION {{ guest_user }}
 - name: Clone dotfiles
   ansible.builtin.git:
     dest: "{{ guest_home }}/.config/zsh"
@@ -12,10 +13,6 @@
   ansible.builtin.blockinfile:
     dest: "{{ guest_home }}/.zshenv"
     block: |
-      export XDG_CONFIG_HOME="$HOME/.config"
-      export XDG_DATA_HOME="$XDG_CONFIG_HOME/local/share"
-      export XDG_CACHE_HOME="$XDG_CONFIG_HOME/cache"
-
       export EDITOR="nvim"
       export VISUAL="nvim"
 
@@ -24,6 +21,10 @@
 
       export HISTSIZE=10000
       export SAVEHIST=10000
+
+      export XDG_CONFIG_HOME="$HOME/.config"
+      export XDG_DATA_HOME="$XDG_CONFIG_HOME/local/share"
+      export XDG_CACHE_HOME="$XDG_CONFIG_HOME/cache"
     create: true
   become_user: "{{ guest_user }}"
 - name: Install oh-my-sh
@@ -36,16 +37,12 @@
     repo: "https://github.com/Aloxaf/fzf-tab"
     dest: "{{ guest_home }}/.oh-my-zsh/custom/plugins/fzf-tab"
   become_user: "{{ guest_user }}"
-- name: Install zsh-vi-mode
-  ansible.builtin.git:
-    repo: "https://github.com/jeffreytse/zsh-vi-mode.git"
-    dest: "{{ guest_home }}/.oh-my-zsh/custom/plugins/zsh-vi-mode"
-  become_user: "{{ guest_user }}"
 - name: Install startship
   ansible.builtin.shell:
     executable: /usr/bin/zsh
     cmd: |
       curl -sS https://starship.rs/install.sh | sh -s -- --yes
+  when: ansible_facts['hostname'] != 'openbsd'
 - name: Add startshipconfig
   ansible.builtin.blockinfile:
     dest: "{{ guest_home }}/.config/starship.toml"
@@ -69,4 +66,13 @@
 
       [line_break]
       disabled = false
+  when: ansible_facts['hostname'] != 'openbsd'
+- name: Setup minimal theme when using OpenBSD
+  ansible.builtin.lineinfile:
+    path: "{{ guest_home }}/.config/zsh/.zshrc"
+    regexp: 'ZSH_THEME=".*"'
+    line: 'ZSH_THEME="minimal"'
+    owner: vagrant
+    group: vagrant
+    mode: '0755'
 ...

@@ -1,31 +1,34 @@
 Vagrant.configure("2") do |config|
   config.vm.define :openbsd do |openbsd|
 
-    config.vm.box = "generic/openbsd7"
-    config.ssh.password = "vagrant"
+    openbsd.vm.box = "generic/openbsd7"
+    openbsd.vm.hostname = "openbsd"
+    openbsd.ssh.password = "vagrant"
+    openbsd.ssh.port = 2297
+    # openbsd.ssh.private_key_path = "../id_ed25519"
+    openbsd.vm.network "forwarded_port", guest: 22, host: 2297
 
     openbsd.vm.provider :virtualbox
     openbsd.vm.disk :disk, size: "40960MB", primary: true
-    config.vm.provider "virtualbox" do |v|
+    openbsd.vm.provider "virtualbox" do |v|
       v.memory = 16384
       v.cpus = 6
     end
-    openbsd.vm.hostname = "openbsd"
 
     openbsd.ssh.shell="sh"
 
     openbsd.vm.network "private_network", ip: "192.168.56.4"
 
-    openbsd.vm.synced_folder "workspace/", "/workspace/", 
-      create: true
+    openbsd.vm.synced_folder "space/", "/space/", 
+     create: true, type: "rsync"
+    openbsd.vm.synced_folder ".", "/vagrant", disabled: true
 
     openbsd.vm.provision "shell",
       inline: "pkg_add -I python-3.10.9p0"
 
-
     openbsd.vm.provision :ansible do |ansible|
       ansible.playbook = "provisioning/ansible.yml"
-      ansible.raw_arguments = ["--vault-password-file=../secrets_password.txt"]
+      ansible.raw_arguments = ["--vault-password-file=../secrets_password.txt", "-vv"]
     end
   end
 end

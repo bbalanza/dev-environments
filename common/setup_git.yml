@@ -15,11 +15,6 @@
       echo export SSH_AGENT_PID=$SSH_AGENT_PID >> "{{ guest_home }}/.bashrc"
   register: env_vars_stdout
   become_user: '{{ guest_user }}'
-- name: Setup environment variables
-  ansible.builtin.blockinfile:
-    path: "$HOME/.bashrc"
-    block: |
-
 - name: Setup git user.name
   ansible.builtin.git_config:
     name: user.name

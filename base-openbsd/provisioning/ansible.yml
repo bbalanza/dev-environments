@@ -9,16 +9,35 @@
   pre_tasks:
     - name: Include secret variables
       include_vars: "{{ common_path }}/secrets.yml"
+    - name: Configure user and ssh configs
+      ansible.builtin.include_tasks: "{{ common_path }}/config_ssh_key.yml"
+  # - name: Update currently installed packages
+  #   ansible.builtin.shell:
+  #     cmd: |
+  #       pkg_add -u
+    - name: Create user folders
+      ansible.builtin.include_tasks: "{{ common_path }}/create_home_folders.yml"
   tasks:
     - name: Install base packages
       ansible.builtin.package:
         name:
           - git
           - zsh
-          - htop
           - neovim
+          - htop
           - neofetch
-        state: present
+          - fd
+          - ripgrep
+          - exa
+          - curl
+          - fzf
+          - bat
+          - go
+        state: latest
     - name: Setup git global configs
       ansible.builtin.include_tasks: "{{ common_path }}/setup_git.yml"
+    - name: Setup neovim
+      ansible.builtin.include_tasks: "{{ common_path }}/setup_nvim.yml"
+    - name: Setup zsh
+      ansible.builtin.include_tasks: "{{ common_path }}/setup_zsh.yml"
 ...
