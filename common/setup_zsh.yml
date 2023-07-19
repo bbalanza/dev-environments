@@ -7,7 +7,7 @@
 - name: Clone dotfiles
   ansible.builtin.git:
     dest: "{{ guest_home }}/.config/zsh"
-    repo: "https://bbalanza:{{ github_token}}@github.com/bbalanza/zsh_dotfiles.git"
+    repo: "https://bbalanza:{{ github_token }}@github.com/bbalanza/zsh_dotfiles.git"
   become_user: "{{ guest_user }}"
 - name: Setup .zshenv
   ansible.builtin.blockinfile:
@@ -42,7 +42,9 @@
     executable: /usr/bin/zsh
     cmd: |
       curl -sS https://starship.rs/install.sh | sh -s -- --yes
-  when: ansible_facts['hostname'] != 'openbsd'
+  when:
+    - ansible_facts['hostname'] != 'openbsd'
+    - ansible_facts['hostname'] != 'freebsd'
 - name: Add startshipconfig
   ansible.builtin.blockinfile:
     dest: "{{ guest_home }}/.config/starship.toml"
@@ -66,8 +68,10 @@
 
       [line_break]
       disabled = false
-  when: ansible_facts['hostname'] != 'openbsd'
-- name: Setup minimal theme when using OpenBSD
+  when:
+    - ansible_facts['hostname'] != 'openbsd'
+    - ansible_facts['hostname'] != 'freebsd'
+- name: Setup minimal theme when using BSD
   ansible.builtin.lineinfile:
     path: "{{ guest_home }}/.config/zsh/.zshrc"
     regexp: 'ZSH_THEME=".*"'
@@ -75,4 +79,6 @@
     owner: vagrant
     group: vagrant
     mode: '0755'
+  when:
+    - ansible_facts['hostname'] == 'openbsd' or ansible_facts['hostname'] == 'freebsd'
 ...
