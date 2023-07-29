@@ -12,7 +12,9 @@
   ansible.builtin.git:
     repo: "https://bbalanza:{{ github_token }}@github.com/bbalanza/nvim-dotfiles.git"
     dest: "{{ guest_home }}/.config/nvim"
-  when: ansible_facts['hostname'] != "tex"
+  when: 
+    - ansible_facts['hostname'] != "tex"
+    - ansible_facts['hostname'] != "freebsd"
   become_user: "{{ guest_user }}"
 - name: Clone tex configuration
   ansible.builtin.git:
@@ -21,5 +23,13 @@
     single_branch: true
     version: tex
   when: ansible_facts['hostname'] == "tex"
+  become_user: "{{ guest_user }}"
+- name: Clone tex configuration
+  ansible.builtin.git:
+    repo: "https://bbalanza:{{ github_token }}@github.com/bbalanza/nvim-dotfiles.git"
+    dest: "{{ guest_home }}/.config/nvim"
+    single_branch: true
+    version: web-dev
+  when: ansible_facts['hostname'] == "freebsd"
   become_user: "{{ guest_user }}"
 ...

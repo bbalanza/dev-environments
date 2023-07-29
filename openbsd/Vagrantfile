@@ -1,11 +1,10 @@
 Vagrant.configure("2") do |config|
   config.vm.define :openbsd do |openbsd|
 
-    openbsd.vm.box = "generic/openbsd7"
+    openbsd.vm.box = "twingly/openbsd-7.3-amd64"
     openbsd.vm.hostname = "openbsd"
     openbsd.ssh.password = "vagrant"
     openbsd.ssh.port = 2297
-    # openbsd.ssh.private_key_path = "../id_ed25519"
     openbsd.vm.network "forwarded_port", guest: 22, host: 2297
 
     openbsd.vm.provider :virtualbox
@@ -24,7 +23,7 @@ Vagrant.configure("2") do |config|
     openbsd.vm.synced_folder ".", "/vagrant", disabled: true
 
     openbsd.vm.provision "shell",
-      inline: "pkg_add -I python-3.10.9p0"
+      inline: "pkg_add -I python-3.11.4"
 
     openbsd.vm.provision :ansible do |ansible|
       ansible.playbook = "provisioning/ansible.yml"

@@ -13,6 +13,8 @@
       - zsh
       - fd-find
       - fuse3
+      - htop
+      - neofetch
     update_cache: true
     state: present
 ...

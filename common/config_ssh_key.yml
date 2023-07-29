@@ -9,7 +9,9 @@
     dest: /etc/sudoers.d/wheel_no_password
     mode: 440
     validate: 'visudo -cf %s'
-  when: ansible_facts['hostname'] != 'freebsd'
+  when: 
+    - ansible_facts['hostname'] != 'freebsd'
+    - ansible_facts['hostname'] != 'openbsd'
 - name: Add private key to authorized keys to allow Vagrant to login
   ansible.posix.authorized_key:
     user: vagrant
