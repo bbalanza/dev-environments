@@ -20,9 +20,9 @@ Vagrant.configure("2") do |config|
 
     freebsd.vm.synced_folder "workspace/", "/workspace/", 
       create: true, 
-      type: "nfs",
-      nfs_version: 4,
-      mount_options: ['nocto,noatime']
+      type: "rsync"
+      # nfs_version: 4,
+      # mount_options: ['nocto,noatime']
 
     freebsd.vm.provision "shell" do |shell|
       ssh_pub_key = File.readlines("/home/kykeonaut/Dropbox/Dev/dev_envs/id_ed25519.pub").first.strip
